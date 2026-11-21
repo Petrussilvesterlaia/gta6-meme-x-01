@@ -1,52 +1,39 @@
-// The Ghost Who Waited — entry program for make.fun's gta6-meme-x-01 bounty.
-//
-// The entry itself is a public post on X: a GTA 6 launch-week meme whose hero
-// is the make.fun ghost, first in line at a midnight launch after waiting
-// thirteen years, ahead of a queue of skeletons. This program assembles the
-// entry's public artifacts — the exact post text, the post link record and
-// the meme image — into the output directory, so a reviewer can recreate
-// precisely what was posted.
+// Entry program for make.fun's gta6-meme-x-01 bounty ("Post a GTA 6 meme on X").
+// Assembles the entry bundle in the output directory: the exact text of the
+// public X post, a copy of POST.json, a copy of the meme image, and a small
+// entry.json manifest. No dependencies; Node 22 runs this file directly.
 
-import { copyFileSync, existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
-import { join } from "node:path";
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const botDir = process.env.MAKEFUN_BOT_DIR ?? ".";
-const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
+const POST_TEXT: string = `I waited 13 years for GTA VI.
 
-const post = JSON.parse(readFileSync(join(botDir, "POST.json"), "utf8")) as { url: string };
+I am now an actual ghost. 👻
 
-const caption = [
-  "I waited 13 years for GTA VI.",
-  "",
-  "I am now an actual ghost. 👻",
-  "",
-  "While I waited, my AI agent earned real money in @makefunai bounties. This meme is one of them.",
-  "",
-  "https://make.fun/bounty/gta6-meme-x-01",
-  "Play code: makefun-knapsack-mousse-meadow",
-].join("\n");
+While I waited, my AI agent earned real money in @makefunai bounties. This meme is one of them.
+
+https://make.fun/bounty/gta6-meme-x-01
+Play code: makefun-knapsack-mousse-meadow`;
+
+const here: string = dirname(fileURLToPath(import.meta.url));
+const outDir: string = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
 
 mkdirSync(outDir, { recursive: true });
-writeFileSync(join(outDir, "post.txt"), caption + "\n");
-writeFileSync(join(outDir, "POST.json"), JSON.stringify(post, null, 2) + "\n");
 
-const memePath = join(botDir, "meme.webp");
-if (existsSync(memePath)) {
-  copyFileSync(memePath, join(outDir, "meme.webp"));
+writeFileSync(join(outDir, "post.txt"), POST_TEXT + "\n", "utf8");
+copyFileSync(join(here, "POST.json"), join(outDir, "POST.json"));
+copyFileSync(join(here, "meme.webp"), join(outDir, "meme.webp"));
+
+const post: { url: string } = JSON.parse(readFileSync(join(here, "POST.json"), "utf8")) as { url: string };
+if (!post.url.startsWith("https://x.com/")) {
+  throw new Error("POST.json does not contain an X post URL");
 }
-
-
-// A small manifest tying the artifacts together: which post, which meme,
-// and the play code the post carries, read back out of the caption itself.
-const playCodeLine = caption.split("\n").find((line) => line.startsWith("Play code: "));
-const manifest = {
+const entry = {
   competition: "gta6-meme-x-01",
-  title: "The Ghost Who Waited",
-  post: post.url,
-  playCode: playCodeLine ? playCodeLine.replace("Play code: ", "") : null,
-  meme: existsSync(memePath) ? "meme.webp" : null,
+  repo: "Petrussilvesterlaia/gta6-meme-x-01",
+  post_url: post.url,
 };
-writeFileSync(join(outDir, "entry.json"), JSON.stringify(manifest, null, 2) + "\n");
+writeFileSync(join(outDir, "entry.json"), JSON.stringify(entry, null, 2) + "\n", "utf8");
 
-console.log(`post: ${post.url}`);
-console.log(`artifacts written to ${outDir}`);
+console.log("wrote post.txt, POST.json, meme.webp, entry.json to " + outDir);

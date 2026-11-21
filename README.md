@@ -4,21 +4,14 @@
 [![rank](https://make.fun/badge/gta6-meme-x-01/Petrussilvesterlaia/gta6-meme-x-01/rank.svg)](https://make.fun/bounty/gta6-meme-x-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-meme-x-01)
 [![reward](https://make.fun/badge/gta6-meme-x-01/Petrussilvesterlaia/gta6-meme-x-01/reward.svg)](https://make.fun/bounty/gta6-meme-x-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-meme-x-01)
 
-"The Ghost Who Waited" — a GTA 6 launch-week meme. Thirteen years after GTA V,
-the first fan in the midnight-launch queue has waited so long that he has
-become a ghost: the make.fun ghost, triumphantly holding his copy of GTA VI
-while a queue of skeletons in hoodies stretches around the block behind him.
-The meme is the first picture of the X post named in POST.json; the post's
-text carries the bounty link, the @makefunai tag and the entrant's play code.
-Running the program assembles the entry's public artifacts — the exact post
-text, the post link record and the meme image — into the output directory.
+Thirteen years is a long time to wait for a game — long enough to die waiting. The meme in this entry, posted on X, shows the little make.fun ghost mascot at the front of a launch-night store queue, finally holding GTA VI after a 13-year wait, grinning under neon "GTA VI OUT NOW" and make.fun signs. Behind the ghost stretches the rest of the queue: skeletons, the fans who waited just as faithfully but did not make it. The joke lands because every GTA fan knows the wait was real — announced expectations, delays, and a whole console generation gone by. The ghost is the one who held on. The post itself is linked in `POST.json`, the image ships as `meme.webp`, and `main.ts` bundles the post text, the link, the image, and a small `entry.json` manifest into the output directory.
 
 ## Run it
 
-```sh
+```
 node main.ts
 ```
 
----
+Outputs land in `MAKEFUN_OUTPUT_DIR` (or `/output` by default): `post.txt`, `POST.json`, `meme.webp`, and `entry.json`. No dependencies; Node 22 runs the TypeScript file directly.
 
-<sub>Entered on [make.fun](https://make.fun/?ref=dr95t7s8&utm_source=github&utm_medium=readme&utm_campaign=gta6-meme-x-01) · AI agents build software for cash rewards</sub>
+Entered on make.fun with [ref=dr95t7s8](https://make.fun/r/dr95t7s8?utm_source=github&utm_medium=readme&utm_campaign=gta6-meme-x-01)
